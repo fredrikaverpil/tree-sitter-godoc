@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/fredrik/code/work/private/tree-sitter-godoc/godoc.dylib'
+relocations:     []
+...

@@ -1,0 +1,161 @@
+{
+  "name": "godoc",
+  "rules": {
+    "document": {
+      "type": "REPEAT",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "package_line"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "section_header"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "func_line"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "type_line"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "var_line"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "const_line"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "text_line"
+          }
+        ]
+      }
+    },
+    "package_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "package"
+          },
+          {
+            "type": "PATTERN",
+            "value": ".*"
+          }
+        ]
+      }
+    },
+    "section_header": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "VARIABLES"
+        },
+        {
+          "type": "STRING",
+          "value": "FUNCTIONS"
+        },
+        {
+          "type": "STRING",
+          "value": "TYPES"
+        },
+        {
+          "type": "STRING",
+          "value": "CONSTANTS"
+        },
+        {
+          "type": "STRING",
+          "value": "DEPRECATED"
+        }
+      ]
+    },
+    "func_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "func"
+          },
+          {
+            "type": "PATTERN",
+            "value": ".*"
+          }
+        ]
+      }
+    },
+    "type_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "type"
+          },
+          {
+            "type": "PATTERN",
+            "value": ".*"
+          }
+        ]
+      }
+    },
+    "var_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "var"
+          },
+          {
+            "type": "PATTERN",
+            "value": ".*"
+          }
+        ]
+      }
+    },
+    "const_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "const"
+          },
+          {
+            "type": "PATTERN",
+            "value": ".*"
+          }
+        ]
+      }
+    },
+    "text_line": {
+      "type": "PATTERN",
+      "value": ".+"
+    }
+  },
+  "extras": [
+    {
+      "type": "PATTERN",
+      "value": "\\s"
+    }
+  ],
+  "conflicts": [],
+  "precedences": [],
+  "externals": [],
+  "inline": [],
+  "supertypes": []
+}

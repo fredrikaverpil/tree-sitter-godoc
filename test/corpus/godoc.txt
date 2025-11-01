@@ -1,0 +1,117 @@
+==================
+Simple function
+==================
+
+func Bool(v bool) *bool
+
+---
+
+(document
+  (func_line))
+
+==================
+Simple type
+==================
+
+type Message interface{}
+
+---
+
+(document
+  (type_line))
+
+==================
+Section header
+==================
+
+FUNCTIONS
+
+---
+
+(document
+  (section_header))
+
+==================
+Package header
+==================
+
+package proto // import "google.golang.org/protobuf/proto"
+
+---
+
+(document
+  (package_line))
+
+==================
+Variable declaration
+==================
+
+var ErrNoSync = errors.New("no sync")
+
+---
+
+(document
+  (var_line))
+
+==================
+Constant declaration
+==================
+
+const MaxInt = 9223372036854775807
+
+---
+
+(document
+  (const_line))
+
+==================
+Multiple items
+==================
+
+package fmt // import "fmt"
+
+FUNCTIONS
+
+func Printf(format string, a ...any) (n int, err error)
+
+---
+
+(document
+  (package_line)
+  (section_header)
+  (func_line))
+
+==================
+Complete godoc output
+==================
+
+package proto // import "google.golang.org/protobuf/proto"
+
+Package proto provides functions operating on protocol buffers.
+
+FUNCTIONS
+
+func Bool(v bool) *bool
+    Bool stores v in a new bool value and returns a pointer to it.
+
+func Marshal(m Message) ([]byte, error)
+    Marshal returns the wire-format encoding of m.
+
+TYPES
+
+type Message = protoreflect.ProtoMessage
+    Message is the top-level interface that all messages must implement.
+
+---
+
+(document
+  (package_line)
+  (text_line)
+  (section_header)
+  (func_line)
+  (text_line)
+  (func_line)
+  (text_line)
+  (section_header)
+  (type_line)
+  (text_line))
