@@ -20,7 +20,15 @@
           },
           {
             "type": "SYMBOL",
-            "name": "type_line"
+            "name": "var_block"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "const_block"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "type_block"
           },
           {
             "type": "SYMBOL",
@@ -29,6 +37,10 @@
           {
             "type": "SYMBOL",
             "name": "const_line"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "type_line"
           },
           {
             "type": "SYMBOL",
@@ -94,21 +106,46 @@
         ]
       }
     },
-    "type_line": {
-      "type": "TOKEN",
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "type"
-          },
-          {
-            "type": "PATTERN",
-            "value": ".*"
+    "var_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "var"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\s*\\("
+              }
+            ]
           }
-        ]
-      }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\)][^\\n]*\\n"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
     },
     "var_line": {
       "type": "TOKEN",
@@ -121,10 +158,51 @@
           },
           {
             "type": "PATTERN",
-            "value": ".*"
+            "value": "\\s+[^\\(\\n][^\\n]*"
           }
         ]
       }
+    },
+    "const_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "const"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\s*\\("
+              }
+            ]
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\)][^\\n]*\\n"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
     },
     "const_line": {
       "type": "TOKEN",
@@ -134,6 +212,55 @@
           {
             "type": "STRING",
             "value": "const"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\s+[^\\(\\n][^\\n]*"
+          }
+        ]
+      }
+    },
+    "type_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "PATTERN",
+          "value": "type\\s+\\w+\\s+(struct|interface)\\s*\\{"
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\s*\\n"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\}][^\\n]*\\n"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "type_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "type"
           },
           {
             "type": "PATTERN",

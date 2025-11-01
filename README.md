@@ -17,13 +17,18 @@ This parser identifies structural regions in `godoc` output to enable:
 The godoc output format includes:
 
 - **Package headers**: `package foo // import "path/to/package"`
-- **Section headers**: `VARIABLES`, `FUNCTIONS`, `TYPES`, `CONSTANTS`
+- **Section headers**: `VARIABLES`, `FUNCTIONS`, `TYPES`, `CONSTANTS`, `DEPRECATED`
 - **Function signatures**: Lines starting with `func `
-- **Type definitions**: Lines starting with `type ` (including multi-line structs/interfaces)
-- **Variable/constant declarations**: Lines starting with `var`/`const`
-- **Code blocks**: Indented content (4+ spaces) - common in examples
+- **Type definitions**:
+  - Single-line: `type Message interface{}`
+  - Multi-line structs/interfaces: `type Config struct { ... }`
+- **Variable declarations**:
+  - Single-line: `var MaxRetries int`
+  - Multi-line blocks: `var ( ... )`
+- **Constant declarations**:
+  - Single-line: `const MaxInt = 123`
+  - Multi-line blocks: `const ( ... )`
 - **Prose**: Regular description text (kept unhighlighted)
-- **URLs**: HTTP/HTTPS links
 
 ## Quick Start for Users
 
@@ -69,14 +74,15 @@ cp build/godoc.dll %LOCALAPPDATA%\nvim-data\site\parser\
 
 ## Usage with godoc.nvim
 
-This parser is designed to work with [godoc.nvim](https://github.com/fredrikaverpil/godoc.nvim). The plugin automatically uses treesitter if the parser is installed, otherwise falls back to Vim syntax highlighting.
+This parser is designed to work with [godoc.nvim](https://github.com/fredrikaverpil/godoc.nvim). The plugin automatically uses treesitter injections when this parser is installed.
 
-**Example**: With tree-sitter-godoc installed:
+**What you get**:
 
-- Section headers (`FUNCTIONS`, `TYPES`) are highlighted
-- Go function signatures get full Go syntax highlighting (keywords, types, punctuation)
-- Type definitions with structs get proper Go syntax highlighting
-- Code examples (indented blocks) get Go syntax highlighting
+- Section headers (`FUNCTIONS`, `TYPES`, etc.) are highlighted
+- Function signatures get full Go syntax highlighting
+- Type definitions (including struct/interface bodies) get Go syntax highlighting
+- Variable and constant declarations get Go syntax highlighting
+- **Multi-line blocks** (`const ( ... )`, `var ( ... )`, `type Name struct { ... }`) have Go syntax highlighting applied to their contents
 - Prose descriptions remain clean and unhighlighted for readability
 
 ## Queries
@@ -87,22 +93,31 @@ Injects Go parser into code regions:
 
 ```scheme
 ;; Function signatures
-((function_signature) @injection.content
+((func_line) @injection.content
   (#set! injection.language "go"))
 
-;; Type definitions
-((type_definition) @injection.content
+;; Type lines (single-line type definitions)
+((type_line) @injection.content
   (#set! injection.language "go"))
 
-;; Variable/constant declarations
-((variable_declaration) @injection.content
+;; Type blocks (multi-line struct/interface definitions)
+((type_block) @injection.content
   (#set! injection.language "go"))
 
-((const_declaration) @injection.content
+;; Variable lines (single-line declarations)
+((var_line) @injection.content
   (#set! injection.language "go"))
 
-;; Code blocks
-((code_block) @injection.content
+;; Variable blocks (multi-line var blocks)
+((var_block) @injection.content
+  (#set! injection.language "go"))
+
+;; Constant lines (single-line declarations)
+((const_line) @injection.content
+  (#set! injection.language "go"))
+
+;; Constant blocks (multi-line const blocks)
+((const_block) @injection.content
   (#set! injection.language "go"))
 ```
 
@@ -111,14 +126,14 @@ Injects Go parser into code regions:
 Highlights structural elements:
 
 ```scheme
-;; Section headers
+;; Section headers (VARIABLES, FUNCTIONS, TYPES, etc.)
 (section_header) @text.title
 
-;; Package header
-(package_header) @keyword.import
+;; Package declaration line
+(package_line) @keyword.import
 
-;; URLs
-(url_line) @text.uri
+;; Text lines remain unhighlighted for readability
+(text_line) @none
 ```
 
 ## Development
@@ -181,15 +196,15 @@ type MarshalOptions struct {
 
 The parser creates this structure:
 
-- `package proto...` → `package_header` (highlighted as keyword)
-- `Package proto provides...` → `prose_line` (unhighlighted)
+- `package proto...` → `package_line` (highlighted as keyword)
+- `Package proto provides...` → `text_line` (unhighlighted)
 - `FUNCTIONS` → `section_header` (highlighted as title)
-- `func Bool(v bool) *bool` → `function_signature` → **Go parser injected**
-- `Bool stores v...` → `prose_line` (unhighlighted)
-- `func Marshal...` → `function_signature` → **Go parser injected**
+- `func Bool(v bool) *bool` → `func_line` → **Go parser injected**
+- `Bool stores v...` → `text_line` (unhighlighted)
+- `func Marshal...` → `func_line` → **Go parser injected**
 - `TYPES` → `section_header` (highlighted as title)
-- `type Message...` → `type_definition` → **Go parser injected**
-- `type MarshalOptions struct { ... }` → `type_definition` → **Go parser injected**
+- `type Message...` → `type_line` → **Go parser injected**
+- `type MarshalOptions struct { ... }` → `type_block` → **Go parser injected** (including struct fields)
 
 ## Contributing
 

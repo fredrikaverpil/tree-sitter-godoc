@@ -1,5 +1,10 @@
 [
   {
+    "type": "const_block",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "document",
     "named": true,
     "fields": {},
@@ -7,6 +12,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "const_block",
+          "named": true
+        },
         {
           "type": "const_line",
           "named": true
@@ -28,7 +37,15 @@
           "named": true
         },
         {
+          "type": "type_block",
+          "named": true
+        },
+        {
           "type": "type_line",
+          "named": true
+        },
+        {
+          "type": "var_block",
           "named": true
         },
         {
@@ -42,6 +59,20 @@
     "type": "section_header",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "type_block",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "var_block",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": ")",
+    "named": false
   },
   {
     "type": "CONSTANTS",
@@ -86,5 +117,9 @@
   {
     "type": "var_line",
     "named": true
+  },
+  {
+    "type": "}",
+    "named": false
   }
 ]

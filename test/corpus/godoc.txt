@@ -115,3 +115,45 @@ type Message = protoreflect.ProtoMessage
   (section_header)
   (type_line)
   (text_line))
+
+==================
+Constant block
+==================
+
+const (
+    MaxInt = 9223372036854775807
+    MinInt = -9223372036854775808
+)
+
+---
+
+(document
+  (const_block))
+
+==================
+Variable block
+==================
+
+var (
+    ErrNoSync = errors.New("no sync")
+    ErrTimeout = errors.New("timeout")
+)
+
+---
+
+(document
+  (var_block))
+
+==================
+Type struct block
+==================
+
+type Config struct {
+    Name string
+    Port int
+}
+
+---
+
+(document
+  (type_block))

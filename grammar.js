@@ -18,9 +18,12 @@ module.exports = grammar({
         $.package_line,
         $.section_header,
         $.func_line,
-        $.type_line,
+        $.var_block,
+        $.const_block,
+        $.type_block,
         $.var_line,
         $.const_line,
+        $.type_line,
         $.text_line,
       )
     ),
@@ -40,14 +43,52 @@ module.exports = grammar({
     // Function signature - capture whole line starting with "func"
     func_line: $ => token(seq('func', /.*/)),
 
-    // Type definition - capture whole line starting with "type"
+    // Variable block: var (
+    //   ...
+    // )
+    var_block: $ => seq(
+      token(seq('var', /\s*\(/)),
+      repeat(choice(
+        /[^\)][^\n]*\n/,
+        /\n/
+      )),
+      ')'
+    ),
+
+    // Single-line variable declaration (must NOT have opening paren)
+    var_line: $ => token(seq('var', /\s+[^\(\n][^\n]*/)),
+
+    // Constant block: const (
+    //   ...
+    // )
+    const_block: $ => seq(
+      token(seq('const', /\s*\(/)),
+      repeat(choice(
+        /[^\)][^\n]*\n/,
+        /\n/
+      )),
+      ')'
+    ),
+
+    // Single-line constant declaration (must NOT have opening paren)
+    const_line: $ => token(seq('const', /\s+[^\(\n][^\n]*/)),
+
+    // Type block: type Name struct {
+    //   ...
+    // }
+    // Only matches when there's content on subsequent lines (not single-line interface{})
+    type_block: $ => seq(
+      /type\s+\w+\s+(struct|interface)\s*\{/,
+      /\s*\n/,  // Require newline after opening brace to distinguish from single-line
+      repeat(choice(
+        /[^\}][^\n]*\n/,
+        /\n/
+      )),
+      '}'
+    ),
+
+    // Single-line type definition (everything else)
     type_line: $ => token(seq('type', /.*/)),
-
-    // Variable declaration - capture whole line starting with "var"
-    var_line: $ => token(seq('var', /.*/)),
-
-    // Constant declaration - capture whole line starting with "const"
-    const_line: $ => token(seq('const', /.*/)),
 
     // Non-empty text line
     text_line: $ => /.+/,
