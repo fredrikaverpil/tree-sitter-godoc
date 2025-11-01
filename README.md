@@ -147,7 +147,6 @@ Highlights structural elements:
 ### Prerequisites
 
 - [tree-sitter CLI](https://github.com/tree-sitter/tree-sitter/blob/master/cli/README.md)
-- Node.js (for testing)
 - A C compiler
 
 ### Building

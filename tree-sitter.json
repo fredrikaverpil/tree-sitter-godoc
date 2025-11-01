@@ -1,0 +1,19 @@
+{
+  "grammars": [
+    {
+      "name": "godoc",
+      "scope": "source.godoc",
+      "file-types": [
+        "godoc"
+      ],
+      "path": ".",
+      "highlights": "queries/highlights.scm",
+      "injections": "queries/injections.scm"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Tree-sitter grammar for Go documentation (godoc) output"
+  }
+}
