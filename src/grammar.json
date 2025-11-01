@@ -1,4 +1,5 @@
 {
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
   "name": "godoc",
   "rules": {
     "document": {
@@ -13,6 +14,10 @@
           {
             "type": "SYMBOL",
             "name": "section_header"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "func_block"
           },
           {
             "type": "SYMBOL",
@@ -93,18 +98,42 @@
     "func_line": {
       "type": "TOKEN",
       "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "func"
-          },
-          {
-            "type": "PATTERN",
-            "value": ".*"
-          }
-        ]
+        "type": "PATTERN",
+        "value": "func\\s+[^{\\n]+"
       }
+    },
+    "func_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "PATTERN",
+          "value": "func\\s+.*\\{"
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\s*\\n"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\}][^\\n]*\\n"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
     },
     "var_block": {
       "type": "SEQ",
@@ -284,5 +313,6 @@
   "precedences": [],
   "externals": [],
   "inline": [],
-  "supertypes": []
+  "supertypes": [],
+  "reserved": {}
 }

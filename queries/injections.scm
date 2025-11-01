@@ -5,6 +5,10 @@
 ((func_line) @injection.content
   (#set! injection.language "go"))
 
+;; Inject Go syntax into function blocks
+((func_block) @injection.content
+  (#set! injection.language "go"))
+
 ;; Inject Go syntax into type lines
 ((type_line) @injection.content
   (#set! injection.language "go"))

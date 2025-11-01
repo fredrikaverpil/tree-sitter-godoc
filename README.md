@@ -18,7 +18,8 @@ The godoc output format includes:
 
 - **Package headers**: `package foo // import "path/to/package"`
 - **Section headers**: `VARIABLES`, `FUNCTIONS`, `TYPES`, `CONSTANTS`, `DEPRECATED`
-- **Function signatures**: Lines starting with `func `
+- **Function signatures**: Lines starting with `func ` (without body)
+- **Function blocks**: Function implementations with bodies in `{ ... }`
 - **Type definitions**:
   - Single-line: `type Message interface{}`
   - Multi-line structs/interfaces: `type Config struct { ... }`
@@ -80,6 +81,7 @@ This parser is designed to work with [godoc.nvim](https://github.com/fredrikaver
 
 - Section headers (`FUNCTIONS`, `TYPES`, etc.) are highlighted
 - Function signatures get full Go syntax highlighting
+- **Function blocks** (`func Name() { ... }`) have Go syntax highlighting applied to their bodies
 - Type definitions (including struct/interface bodies) get Go syntax highlighting
 - Variable and constant declarations get Go syntax highlighting
 - **Multi-line blocks** (`const ( ... )`, `var ( ... )`, `type Name struct { ... }`) have Go syntax highlighting applied to their contents
@@ -94,6 +96,10 @@ Injects Go parser into code regions:
 ```scheme
 ;; Function signatures
 ((func_line) @injection.content
+  (#set! injection.language "go"))
+
+;; Function blocks
+((func_block) @injection.content
   (#set! injection.language "go"))
 
 ;; Type lines (single-line type definitions)
@@ -205,6 +211,17 @@ The parser creates this structure:
 - `TYPES` → `section_header` (highlighted as title)
 - `type Message...` → `type_line` → **Go parser injected**
 - `type MarshalOptions struct { ... }` → `type_block` → **Go parser injected** (including struct fields)
+
+For function implementations with bodies:
+
+```go
+func Example() {
+    fmt.Println("hello")
+}
+```
+
+Would be parsed as:
+- Entire function → `func_block` → **Go parser injected** (including signature and body)
 
 ## Contributing
 

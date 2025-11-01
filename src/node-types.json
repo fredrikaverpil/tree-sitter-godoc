@@ -7,6 +7,7 @@
   {
     "type": "document",
     "named": true,
+    "root": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -18,6 +19,10 @@
         },
         {
           "type": "const_line",
+          "named": true
+        },
+        {
+          "type": "func_block",
           "named": true
         },
         {
@@ -54,6 +59,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "func_block",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "section_header",

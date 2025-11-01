@@ -157,3 +157,56 @@ type Config struct {
 
 (document
   (type_block))
+
+==================
+Function block
+==================
+
+func ExampleFunc() {
+    fmt.Println("hello")
+    return
+}
+
+---
+
+(document
+  (func_block))
+
+==================
+Function block with receiver
+==================
+
+func (s *Server) HandleRequest(req Request) {
+    s.process(req)
+}
+
+---
+
+(document
+  (func_block))
+
+==================
+Function block with return values
+==================
+
+func Calculate(a, b int) (int, error) {
+    result := a + b
+    return result, nil
+}
+
+---
+
+(document
+  (func_block))
+
+==================
+Empty function block
+==================
+
+func NoOp() {
+}
+
+---
+
+(document
+  (func_block))

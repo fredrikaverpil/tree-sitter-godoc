@@ -17,6 +17,7 @@ module.exports = grammar({
       choice(
         $.package_line,
         $.section_header,
+        $.func_block,
         $.func_line,
         $.var_block,
         $.const_block,
@@ -40,8 +41,22 @@ module.exports = grammar({
       'DEPRECATED'
     ),
 
-    // Function signature - capture whole line starting with "func"
-    func_line: $ => token(seq('func', /.*/)),
+    // Function signature - capture whole line starting with "func" (but not ending with {)
+    func_line: $ => token(/func\s+[^{\n]+/),
+
+    // Function block: func Name() {
+    //   ...
+    // }
+    // Matches function implementations with bodies in curly braces
+    func_block: $ => seq(
+      /func\s+.*\{/,     // func signature ending with {
+      /\s*\n/,           // Optional whitespace and newline after opening brace
+      repeat(choice(
+        /[^\}][^\n]*\n/, // Lines not starting with }
+        /\n/             // Empty lines
+      )),
+      '}'
+    ),
 
     // Variable block: var (
     //   ...
