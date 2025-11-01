@@ -1,0 +1,348 @@
+==================
+Simple function
+==================
+
+func Bool(v bool) *bool
+
+---
+
+(document
+  (func_line))
+
+==================
+Simple type
+==================
+
+type Message interface{}
+
+---
+
+(document
+  (type_line))
+
+==================
+Section header
+==================
+
+FUNCTIONS
+
+---
+
+(document
+  (section_header))
+
+==================
+Package header
+==================
+
+package proto // import "google.golang.org/protobuf/proto"
+
+---
+
+(document
+  (package_line))
+
+==================
+Variable declaration
+==================
+
+var ErrNoSync = errors.New("no sync")
+
+---
+
+(document
+  (var_line))
+
+==================
+Constant declaration
+==================
+
+const MaxInt = 9223372036854775807
+
+---
+
+(document
+  (const_line))
+
+==================
+Multiple items
+==================
+
+package fmt // import "fmt"
+
+FUNCTIONS
+
+func Printf(format string, a ...any) (n int, err error)
+
+---
+
+(document
+  (package_line)
+  (section_header)
+  (func_line))
+
+==================
+Complete godoc output
+==================
+
+package proto // import "google.golang.org/protobuf/proto"
+
+Package proto provides functions operating on protocol buffers.
+
+FUNCTIONS
+
+func Bool(v bool) *bool
+    Bool stores v in a new bool value and returns a pointer to it.
+
+func Marshal(m Message) ([]byte, error)
+    Marshal returns the wire-format encoding of m.
+
+TYPES
+
+type Message = protoreflect.ProtoMessage
+    Message is the top-level interface that all messages must implement.
+
+---
+
+(document
+  (package_line)
+  (text_line)
+  (section_header)
+  (func_line)
+  (text_line)
+  (func_line)
+  (text_line)
+  (section_header)
+  (type_line)
+  (text_line))
+
+==================
+Constant block
+==================
+
+const (
+    MaxInt = 9223372036854775807
+    MinInt = -9223372036854775808
+)
+
+---
+
+(document
+  (const_block))
+
+==================
+Variable block
+==================
+
+var (
+    ErrNoSync = errors.New("no sync")
+    ErrTimeout = errors.New("timeout")
+)
+
+---
+
+(document
+  (var_block))
+
+==================
+Type struct block
+==================
+
+type Config struct {
+    Name string
+    Port int
+}
+
+---
+
+(document
+  (type_block))
+
+==================
+Function block
+==================
+
+func ExampleFunc() {
+    fmt.Println("hello")
+    return
+}
+
+---
+
+(document
+  (func_block))
+
+==================
+Function block with receiver
+==================
+
+func (s *Server) HandleRequest(req Request) {
+    s.process(req)
+}
+
+---
+
+(document
+  (func_block))
+
+==================
+Function block with return values
+==================
+
+func Calculate(a, b int) (int, error) {
+    result := a + b
+    return result, nil
+}
+
+---
+
+(document
+  (func_block))
+
+==================
+Empty function block
+==================
+
+func NoOp() {
+}
+
+---
+
+(document
+  (func_block))
+
+==================
+Code block with 4-space indentation (zlib example)
+==================
+
+For example, to write compressed data to a buffer:
+
+var b bytes.Buffer
+    w := zlib.NewWriter(&b)
+    w.Write([]byte("hello, world\n"))
+    w.Close()
+
+---
+
+(document
+  (text_line)
+  (var_line)
+  (code_block))
+
+==================
+Code block with 8-space indentation (textproto example)
+==================
+
+For example, a client might run a HELP command:
+
+        id, err := c.Cmd("HELP")
+        if err != nil {
+                return nil, err
+        }
+
+---
+
+(document
+  (text_line)
+  (code_block))
+
+==================
+Code block with multiple patterns
+==================
+
+Here's an example with various Go patterns:
+
+    // Initialize variables
+    var count int
+    for i := 0; i < 10; i++ {
+        count++
+    }
+    return count
+
+---
+
+(document
+  (text_line)
+  (code_block))
+
+==================
+Indented prose after declaration (not a code block)
+==================
+
+func CanonicalMIMEHeaderKey(s string) string
+    CanonicalMIMEHeaderKey returns the canonical format of the MIME header key
+    s. The canonicalization converts the first letter and any letter following
+    a hyphen to upper case; the rest are converted to lowercase.
+
+---
+
+(document
+  (func_line)
+  (text_line)
+  (text_line)
+  (text_line))
+
+==================
+Code block starting with defer
+==================
+
+Example with defer:
+
+    defer close()
+    processData()
+
+---
+
+(document
+  (text_line)
+  (code_block))
+
+==================
+Code block starting with method call
+==================
+
+Example usage:
+
+    client.Connect()
+    client.Send(data)
+
+---
+
+(document
+  (text_line)
+  (text_line)
+  (text_line))
+
+==================
+Code block with empty lines
+==================
+
+Example with empty lines:
+
+    x := 10
+
+    y := 20
+    fmt.Println(x + y)
+
+---
+
+(document
+  (text_line)
+  (code_block))
+
+==================
+Code block with map literal
+==================
+
+Given that input, ReadMIMEHeader returns the map:
+
+    map[string][]string{
+    	"My-Key": {"Value 1", "Value 2"},
+    	"Long-Key": {"Even Longer Value"},
+    }
+
+---
+
+(document
+  (text_line)
+  (code_block))

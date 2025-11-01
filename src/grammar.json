@@ -1,0 +1,397 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
+  "name": "godoc",
+  "rules": {
+    "document": {
+      "type": "REPEAT",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "package_line"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "section_header"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "func_block"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "func_line"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "var_block"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "const_block"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "type_block"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "var_line"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "const_line"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "type_line"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "code_block"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "text_line"
+          }
+        ]
+      }
+    },
+    "package_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "package"
+          },
+          {
+            "type": "PATTERN",
+            "value": ".*"
+          }
+        ]
+      }
+    },
+    "section_header": {
+      "type": "TOKEN",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "VARIABLES"
+          },
+          {
+            "type": "STRING",
+            "value": "FUNCTIONS"
+          },
+          {
+            "type": "STRING",
+            "value": "TYPES"
+          },
+          {
+            "type": "STRING",
+            "value": "CONSTANTS"
+          },
+          {
+            "type": "STRING",
+            "value": "DEPRECATED"
+          }
+        ]
+      }
+    },
+    "func_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "func\\s+[^{\\n]+"
+      }
+    },
+    "func_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PATTERN",
+            "value": "func\\s+.*\\{"
+          }
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\s*\\n"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\}][^\\n]*\\n"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "var_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "var"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\s*\\("
+              }
+            ]
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\)][^\\n]*\\n"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "var_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "var"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\s+[^\\(\\n][^\\n]*"
+          }
+        ]
+      }
+    },
+    "const_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "const"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\s*\\("
+              }
+            ]
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\)][^\\n]*\\n"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "const_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "const"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\s+[^\\(\\n][^\\n]*"
+          }
+        ]
+      }
+    },
+    "type_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PATTERN",
+            "value": "type\\s+\\w+\\s+(struct|interface)\\s*\\{"
+          }
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\s*\\n"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\}][^\\n]*\\n"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "type_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "type"
+          },
+          {
+            "type": "PATTERN",
+            "value": ".*"
+          }
+        ]
+      }
+    },
+    "code_block": {
+      "type": "PREC_DYNAMIC",
+      "value": 1,
+      "content": {
+        "type": "PREC_LEFT",
+        "value": -1,
+        "content": {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,}\\/\\/[^\\n]*\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,}(var|const|type)\\s[^\\n]+\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,}func\\s[^\\n]+\\{[^\\n]*\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,}[a-zA-Z_]\\w*\\s*:=[^\\n]+\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,}[a-zA-Z_]\\w*,\\s*[a-zA-Z_]\\w*\\s*:=[^\\n]+\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,}(defer|go)\\s+[^\\n]+\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,}[a-zA-Z_]\\w*\\([^\\n]*\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,}[a-zA-Z_][\\w\\[\\]]*\\{\\s*\\n"
+                }
+              ]
+            },
+            {
+              "type": "REPEAT1",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "PATTERN",
+                    "value": "[ ]{4,}[^\\n]+\\n"
+                  },
+                  {
+                    "type": "PATTERN",
+                    "value": "[ \\t]*\\n"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "text_line": {
+      "type": "PATTERN",
+      "value": ".+"
+    }
+  },
+  "extras": [
+    {
+      "type": "PATTERN",
+      "value": "\\s"
+    }
+  ],
+  "conflicts": [],
+  "precedences": [],
+  "externals": [],
+  "inline": [],
+  "supertypes": [],
+  "reserved": {}
+}

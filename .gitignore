@@ -1,0 +1,22 @@
+# Build artifacts
+build/
+
+# Go artifacts
+go.sum
+
+# C artifacts
+*.a
+*.so
+*.so.*
+*.dylib
+**/*.dSYM/
+*.dll
+*.pc
+
+# Example dirs
+/examples/*/
+
+# Grammar volatiles
+*.wasm
+*.obj
+*.o
