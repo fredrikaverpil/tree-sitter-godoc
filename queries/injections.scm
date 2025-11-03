@@ -32,11 +32,3 @@
 ((const_block) @injection.content
   (#set! injection.language "go"))
 
-; Inject Go syntax into indented code blocks (code examples in documentation)
-; 8+ space indented code blocks
-((code_block_8plus) @injection.content
-  (#set! injection.language "go"))
-
-; 4-7 space indented code blocks
-((code_block_4) @injection.content
-  (#set! injection.language "go"))

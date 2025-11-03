@@ -1,15 +1,5 @@
 [
   {
-    "type": "code_block_4",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "code_block_8plus",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "const_block",
     "named": true,
     "fields": {}
@@ -23,14 +13,6 @@
       "multiple": true,
       "required": false,
       "types": [
-        {
-          "type": "code_block_4",
-          "named": true
-        },
-        {
-          "type": "code_block_8plus",
-          "named": true
-        },
         {
           "type": "const_block",
           "named": true
@@ -94,10 +76,6 @@
     "fields": {}
   },
   {
-    "type": ")",
-    "named": false
-  },
-  {
     "type": "const_line",
     "named": true
   },
@@ -124,9 +102,5 @@
   {
     "type": "var_line",
     "named": true
-  },
-  {
-    "type": "}",
-    "named": false
   }
 ]

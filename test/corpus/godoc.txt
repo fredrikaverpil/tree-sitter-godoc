@@ -234,60 +234,6 @@ func NoOp() {
   (func_block))
 
 ==================
-Code block with 4-space indentation (zlib example)
-==================
-
-For example, to write compressed data to a buffer:
-
-var b bytes.Buffer
-    w := zlib.NewWriter(&b)
-    w.Write([]byte("hello, world\n"))
-    w.Close()
-
----
-
-(document
-  (text_line)
-  (var_line)
-  (code_block_4))
-
-==================
-Code block with 8-space indentation (textproto example)
-==================
-
-For example, a client might run a HELP command:
-
-        id, err := c.Cmd("HELP")
-        if err != nil {
-                return nil, err
-        }
-
----
-
-(document
-  (text_line)
-  (code_block_8plus))
-
-==================
-Code block with multiple patterns
-==================
-
-Here's an example with various Go patterns:
-
-    // Initialize variables
-    var count int
-    for i := 0; i < 10; i++ {
-        count++
-    }
-    return count
-
----
-
-(document
-  (text_line)
-  (code_block_4))
-
-==================
 Indented prose after declaration (not a code block)
 ==================
 
@@ -303,21 +249,6 @@ func CanonicalMIMEHeaderKey(s string) string
   (text_line)
   (text_line)
   (text_line))
-
-==================
-Code block starting with defer
-==================
-
-Example with defer:
-
-    defer close()
-    processData()
-
----
-
-(document
-  (text_line)
-  (code_block_4))
 
 ==================
 Code block starting with method call
@@ -336,35 +267,111 @@ Example usage:
   (text_line))
 
 ==================
-Code block with empty lines
+Indented variable declaration (4 spaces)
 ==================
 
-Example with empty lines:
+Example with variable:
 
-    x := 10
-
-    y := 20
-    fmt.Println(x + y)
+    var x = 10
 
 ---
 
 (document
   (text_line)
-  (code_block_4))
+  (var_line))
 
 ==================
-Code block with map literal
+Indented constant declaration (8 spaces)
 ==================
 
-Given that input, ReadMIMEHeader returns the map:
+Example with constant:
 
-    map[string][]string{
-    	"My-Key": {"Value 1", "Value 2"},
-    	"Long-Key": {"Even Longer Value"},
+        const Pi = 3.14159
+
+---
+
+(document
+  (text_line)
+  (const_line))
+
+==================
+Indented function signature (4 spaces)
+==================
+
+Example function:
+
+    func Example() string
+
+---
+
+(document
+  (text_line)
+  (func_line))
+
+==================
+Indented function block (4 spaces)
+==================
+
+Example with implementation:
+
+    func Calculate(x int) int {
+        return x * 2
     }
 
 ---
 
 (document
   (text_line)
-  (code_block_4))
+  (func_block))
+
+==================
+Indented type struct block (8 spaces)
+==================
+
+Example type definition:
+
+        type Point struct {
+            X int
+            Y int
+        }
+
+---
+
+(document
+  (text_line)
+  (type_block))
+
+==================
+Indented var block (4 spaces)
+==================
+
+Example with multiple variables:
+
+    var (
+        count int
+        name string
+    )
+
+---
+
+(document
+  (text_line)
+  (var_block))
+
+==================
+Indented const block (8 spaces)
+==================
+
+Example with multiple constants:
+
+        const (
+            MaxRetries = 3
+            Timeout = 30
+        )
+
+---
+
+(document
+  (text_line)
+  (const_block))
+

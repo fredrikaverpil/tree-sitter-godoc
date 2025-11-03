@@ -25,8 +25,6 @@ module.exports = grammar({
 				$.var_line,
 				$.const_line,
 				$.type_line,
-				$.code_block_8plus,
-				$.code_block_4,
 				$.text_line,
 			)
 		),
@@ -46,112 +44,100 @@ module.exports = grammar({
 		// Function signature - capture whole line starting with "func" (but not ending with {)
 		// Matches { within the line (like interface{}) but not { at end (which indicates func_block)
 		// Strategy: { is only matched when followed immediately by a non-whitespace character
-		func_line: $ => token(/func\s+(?:[^\{\n]|\{[^\s\n])+/),
+		// Supports any indentation level (including no indentation)
+		func_line: $ => token(choice(
+			/func\s+(?:[^\{\n]|\{[^\s\n])+/,  // No indentation
+			/[ \t]+func\s+(?:[^\{\n]|\{[^\s\n])+/  // With indentation
+		)),
 
 		// Function block: func Name() {
 		//   ...
 		// }
 		// Matches function implementations with bodies in curly braces
-		// Only matches at start of line (no indentation) - indented examples are caught by code_block
+		// Supports any indentation level (including no indentation)
 		func_block: $ => seq(
-			token(/func\s+.*\{/),  // func signature ending with { (no leading whitespace)
+			token(choice(
+				/func\s+.*\{/,  // No indentation
+				/[ \t]+func\s+.*\{/  // With indentation
+			)),
 			/\s*\n/,           // Optional whitespace and newline after opening brace
 			repeat(choice(
-				/[^\}][^\n]*\n/, // Lines not starting with }
-				/\n/             // Empty lines
+				/[ \t]*[^\}\s][^\n]*\n/, // Lines with content (not just whitespace and })
+				/[ \t]*\n/             // Empty or whitespace-only lines
 			)),
-			'}'
+			/[ \t]*\}/  // Closing brace with optional leading whitespace
 		),
 
 		// Variable block: var (
 		//   ...
 		// )
+		// Supports any indentation level (including no indentation)
 		var_block: $ => seq(
-			token(seq('var', /\s*\(/)),
-			repeat(choice(
-				/[^\)][^\n]*\n/,
-				/\n/
+			token(choice(
+				seq('var', /\s*\(/),  // No indentation
+				seq(/[ \t]+var/, /\s*\(/)  // With indentation
 			)),
-			')'
+			repeat(choice(
+				/[ \t]*[^\)\s][^\n]*\n/, // Lines with content (not just whitespace and ))
+				/[ \t]*\n/             // Empty or whitespace-only lines
+			)),
+			/[ \t]*\)/  // Closing paren with optional leading whitespace
 		),
 
 		// Single-line variable declaration (must NOT have opening paren)
-		var_line: $ => token(seq('var', /\s+[^\(\n][^\n]*/)),
+		// Supports any indentation level (including no indentation)
+		var_line: $ => token(choice(
+			seq('var', /\s+[^\(\n][^\n]*/),  // No indentation
+			seq(/[ \t]+var/, /\s+[^\(\n][^\n]*/)  // With indentation
+		)),
 
 		// Constant block: const (
 		//   ...
 		// )
+		// Supports any indentation level (including no indentation)
 		const_block: $ => seq(
-			token(seq('const', /\s*\(/)),
-			repeat(choice(
-				/[^\)][^\n]*\n/,
-				/\n/
+			token(choice(
+				seq('const', /\s*\(/),  // No indentation
+				seq(/[ \t]+const/, /\s*\(/)  // With indentation
 			)),
-			')'
+			repeat(choice(
+				/[ \t]*[^\)\s][^\n]*\n/, // Lines with content (not just whitespace and ))
+				/[ \t]*\n/             // Empty or whitespace-only lines
+			)),
+			/[ \t]*\)/  // Closing paren with optional leading whitespace
 		),
 
 		// Single-line constant declaration (must NOT have opening paren)
-		const_line: $ => token(seq('const', /\s+[^\(\n][^\n]*/)),
+		// Supports any indentation level (including no indentation)
+		const_line: $ => token(choice(
+			seq('const', /\s+[^\(\n][^\n]*/),  // No indentation
+			seq(/[ \t]+const/, /\s+[^\(\n][^\n]*/)  // With indentation
+		)),
 
 		// Type block: type Name struct {
 		//   ...
 		// }
 		// Only matches when there's content on subsequent lines (not single-line interface{})
-		// Only matches at start of line (no indentation) - indented examples are caught by code_block
+		// Supports any indentation level (including no indentation)
 		type_block: $ => seq(
-			token(/type\s+\w+\s+(struct|interface)\s*\{/),  // type definition (no leading whitespace)
+			token(choice(
+				/type\s+\w+\s+(struct|interface)\s*\{/,  // No indentation
+				/[ \t]+type\s+\w+\s+(struct|interface)\s*\{/  // With indentation
+			)),
 			/\s*\n/,  // Require newline after opening brace to distinguish from single-line
 			repeat(choice(
-				/[^\}][^\n]*\n/,
-				/\n/
+				/[ \t]*[^\}\s][^\n]*\n/, // Lines with content (not just whitespace and })
+				/[ \t]*\n/             // Empty or whitespace-only lines
 			)),
-			'}'
+			/[ \t]*\}/  // Closing brace with optional leading whitespace
 		),
 
 		// Single-line type definition (everything else)
-		type_line: $ => token(seq('type', /.*/)),
-
-		// Indented code block with 8+ spaces - detects Go code examples through pattern matching
-		// First line must start with Go code patterns at 8+ space indentation
-		// Continuation lines must maintain 8+ space indentation (stops at dedent to fewer spaces)
-		// This handles deeply nested examples and respects indentation scope
-		code_block_8plus: $ => prec.dynamic(1, prec.left(-1, seq(
-			choice(
-				/[ ]{8,}\/\/[^\n]*\n/,                       // Comment
-				/[ ]{8,}(var|const|type)\s[^\n]+\n/,         // Declaration keywords
-				/[ ]{8,}func\s[^\n]+\{[^\n]*\n/,             // Function definition
-				/[ ]{8,}[a-zA-Z_]\w*\s*:=[^\n]+\n/,          // Simple assignment (id := ...)
-				/[ ]{8,}[a-zA-Z_]\w*,\s*[a-zA-Z_]\w*\s*:=[^\n]+\n/, // Multi-assignment (id1, id2 := ...)
-				/[ ]{8,}(defer|go)\s+[^\n]+\n/,              // defer or go statement
-				/[ ]{8,}[a-zA-Z_]\w*\([^\n]*\n/,             // Function call (no dots)
-				/[ ]{8,}[a-zA-Z_][\w\[\]]*\{\s*\n/,          // Composite literal (TypeName{ or map[type]{)
-			),
-			repeat1(choice(
-				/[ ]{8,}[^\n]+\n/,      // Additional indented lines at 8+ spaces (at least one required)
-				/[ \t]*\n/              // Empty lines within the block
-			))
-		))),
-
-		// Indented code block with 4-7 spaces - detects Go code examples through pattern matching
-		// First line must start with Go code patterns at 4-7 space indentation
-		// Continuation lines must maintain 4+ space indentation
-		// This handles standard godoc examples with 4-space indentation
-		code_block_4: $ => prec.dynamic(1, prec.left(-1, seq(
-			choice(
-				/[ ]{4,7}\/\/[^\n]*\n/,                       // Comment
-				/[ ]{4,7}(var|const|type)\s[^\n]+\n/,         // Declaration keywords
-				/[ ]{4,7}func\s[^\n]+\{[^\n]*\n/,             // Function definition
-				/[ ]{4,7}[a-zA-Z_]\w*\s*:=[^\n]+\n/,          // Simple assignment (id := ...)
-				/[ ]{4,7}[a-zA-Z_]\w*,\s*[a-zA-Z_]\w*\s*:=[^\n]+\n/, // Multi-assignment (id1, id2 := ...)
-				/[ ]{4,7}(defer|go)\s+[^\n]+\n/,              // defer or go statement
-				/[ ]{4,7}[a-zA-Z_]\w*\([^\n]*\n/,             // Function call (no dots)
-				/[ ]{4,7}[a-zA-Z_][\w\[\]]*\{\s*\n/,          // Composite literal (TypeName{ or map[type]{)
-			),
-			repeat1(choice(
-				/[ ]{4,}[^\n]+\n/,      // Additional indented lines at 4+ spaces (at least one required)
-				/[ \t]*\n/              // Empty lines within the block
-			))
-		))),
+		// Supports any indentation level (including no indentation)
+		type_line: $ => token(choice(
+			seq('type', /.*/),  // No indentation
+			seq(/[ \t]+type/, /.*/))  // With indentation
+		),
 
 		// Non-empty text line
 		text_line: $ => /.+/,
