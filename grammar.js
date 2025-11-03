@@ -25,7 +25,8 @@ module.exports = grammar({
 				$.var_line,
 				$.const_line,
 				$.type_line,
-				$.code_block,
+				$.code_block_8plus,
+				$.code_block_4,
 				$.text_line,
 			)
 		),
@@ -110,23 +111,44 @@ module.exports = grammar({
 		// Single-line type definition (everything else)
 		type_line: $ => token(seq('type', /.*/)),
 
-		// Indented code block - detects Go code examples through pattern matching
-		// Pattern matching distinguishes code from documentation prose (prose won't match Go patterns)
-		// First line must start with Go code patterns (restrictive to prevent mid-block matches)
-		// Requires at least 2 indented lines to form a block (prevents single-line matches)
-		code_block: $ => prec.dynamic(1, prec.left(-1, seq(
+		// Indented code block with 8+ spaces - detects Go code examples through pattern matching
+		// First line must start with Go code patterns at 8+ space indentation
+		// Continuation lines must maintain 8+ space indentation (stops at dedent to fewer spaces)
+		// This handles deeply nested examples and respects indentation scope
+		code_block_8plus: $ => prec.dynamic(1, prec.left(-1, seq(
 			choice(
-				/[ ]{4,}\/\/[^\n]*\n/,                       // Comment
-				/[ ]{4,}(var|const|type)\s[^\n]+\n/,         // Declaration keywords
-				/[ ]{4,}func\s[^\n]+\{[^\n]*\n/,             // Function definition
-				/[ ]{4,}[a-zA-Z_]\w*\s*:=[^\n]+\n/,          // Simple assignment (id := ...)
-				/[ ]{4,}[a-zA-Z_]\w*,\s*[a-zA-Z_]\w*\s*:=[^\n]+\n/, // Multi-assignment (id1, id2 := ...)
-				/[ ]{4,}(defer|go)\s+[^\n]+\n/,              // defer or go statement
-				/[ ]{4,}[a-zA-Z_]\w*\([^\n]*\n/,             // Function call (no dots)
-				/[ ]{4,}[a-zA-Z_][\w\[\]]*\{\s*\n/,          // Composite literal (TypeName{ or map[type]{)
+				/[ ]{8,}\/\/[^\n]*\n/,                       // Comment
+				/[ ]{8,}(var|const|type)\s[^\n]+\n/,         // Declaration keywords
+				/[ ]{8,}func\s[^\n]+\{[^\n]*\n/,             // Function definition
+				/[ ]{8,}[a-zA-Z_]\w*\s*:=[^\n]+\n/,          // Simple assignment (id := ...)
+				/[ ]{8,}[a-zA-Z_]\w*,\s*[a-zA-Z_]\w*\s*:=[^\n]+\n/, // Multi-assignment (id1, id2 := ...)
+				/[ ]{8,}(defer|go)\s+[^\n]+\n/,              // defer or go statement
+				/[ ]{8,}[a-zA-Z_]\w*\([^\n]*\n/,             // Function call (no dots)
+				/[ ]{8,}[a-zA-Z_][\w\[\]]*\{\s*\n/,          // Composite literal (TypeName{ or map[type]{)
 			),
 			repeat1(choice(
-				/[ ]{4,}[^\n]+\n/,      // Additional indented lines (at least one required)
+				/[ ]{8,}[^\n]+\n/,      // Additional indented lines at 8+ spaces (at least one required)
+				/[ \t]*\n/              // Empty lines within the block
+			))
+		))),
+
+		// Indented code block with 4-7 spaces - detects Go code examples through pattern matching
+		// First line must start with Go code patterns at 4-7 space indentation
+		// Continuation lines must maintain 4+ space indentation
+		// This handles standard godoc examples with 4-space indentation
+		code_block_4: $ => prec.dynamic(1, prec.left(-1, seq(
+			choice(
+				/[ ]{4,7}\/\/[^\n]*\n/,                       // Comment
+				/[ ]{4,7}(var|const|type)\s[^\n]+\n/,         // Declaration keywords
+				/[ ]{4,7}func\s[^\n]+\{[^\n]*\n/,             // Function definition
+				/[ ]{4,7}[a-zA-Z_]\w*\s*:=[^\n]+\n/,          // Simple assignment (id := ...)
+				/[ ]{4,7}[a-zA-Z_]\w*,\s*[a-zA-Z_]\w*\s*:=[^\n]+\n/, // Multi-assignment (id1, id2 := ...)
+				/[ ]{4,7}(defer|go)\s+[^\n]+\n/,              // defer or go statement
+				/[ ]{4,7}[a-zA-Z_]\w*\([^\n]*\n/,             // Function call (no dots)
+				/[ ]{4,7}[a-zA-Z_][\w\[\]]*\{\s*\n/,          // Composite literal (TypeName{ or map[type]{)
+			),
+			repeat1(choice(
+				/[ ]{4,}[^\n]+\n/,      // Additional indented lines at 4+ spaces (at least one required)
 				/[ \t]*\n/              // Empty lines within the block
 			))
 		))),

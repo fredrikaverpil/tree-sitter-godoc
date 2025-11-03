@@ -49,7 +49,11 @@
           },
           {
             "type": "SYMBOL",
-            "name": "code_block"
+            "name": "code_block_8plus"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "code_block_4"
           },
           {
             "type": "SYMBOL",
@@ -311,7 +315,7 @@
         ]
       }
     },
-    "code_block": {
+    "code_block_8plus": {
       "type": "PREC_DYNAMIC",
       "value": 1,
       "content": {
@@ -325,35 +329,101 @@
               "members": [
                 {
                   "type": "PATTERN",
-                  "value": "[ ]{4,}\\/\\/[^\\n]*\\n"
+                  "value": "[ ]{8,}\\/\\/[^\\n]*\\n"
                 },
                 {
                   "type": "PATTERN",
-                  "value": "[ ]{4,}(var|const|type)\\s[^\\n]+\\n"
+                  "value": "[ ]{8,}(var|const|type)\\s[^\\n]+\\n"
                 },
                 {
                   "type": "PATTERN",
-                  "value": "[ ]{4,}func\\s[^\\n]+\\{[^\\n]*\\n"
+                  "value": "[ ]{8,}func\\s[^\\n]+\\{[^\\n]*\\n"
                 },
                 {
                   "type": "PATTERN",
-                  "value": "[ ]{4,}[a-zA-Z_]\\w*\\s*:=[^\\n]+\\n"
+                  "value": "[ ]{8,}[a-zA-Z_]\\w*\\s*:=[^\\n]+\\n"
                 },
                 {
                   "type": "PATTERN",
-                  "value": "[ ]{4,}[a-zA-Z_]\\w*,\\s*[a-zA-Z_]\\w*\\s*:=[^\\n]+\\n"
+                  "value": "[ ]{8,}[a-zA-Z_]\\w*,\\s*[a-zA-Z_]\\w*\\s*:=[^\\n]+\\n"
                 },
                 {
                   "type": "PATTERN",
-                  "value": "[ ]{4,}(defer|go)\\s+[^\\n]+\\n"
+                  "value": "[ ]{8,}(defer|go)\\s+[^\\n]+\\n"
                 },
                 {
                   "type": "PATTERN",
-                  "value": "[ ]{4,}[a-zA-Z_]\\w*\\([^\\n]*\\n"
+                  "value": "[ ]{8,}[a-zA-Z_]\\w*\\([^\\n]*\\n"
                 },
                 {
                   "type": "PATTERN",
-                  "value": "[ ]{4,}[a-zA-Z_][\\w\\[\\]]*\\{\\s*\\n"
+                  "value": "[ ]{8,}[a-zA-Z_][\\w\\[\\]]*\\{\\s*\\n"
+                }
+              ]
+            },
+            {
+              "type": "REPEAT1",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "PATTERN",
+                    "value": "[ ]{8,}[^\\n]+\\n"
+                  },
+                  {
+                    "type": "PATTERN",
+                    "value": "[ \\t]*\\n"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "code_block_4": {
+      "type": "PREC_DYNAMIC",
+      "value": 1,
+      "content": {
+        "type": "PREC_LEFT",
+        "value": -1,
+        "content": {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,7}\\/\\/[^\\n]*\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,7}(var|const|type)\\s[^\\n]+\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,7}func\\s[^\\n]+\\{[^\\n]*\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,7}[a-zA-Z_]\\w*\\s*:=[^\\n]+\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,7}[a-zA-Z_]\\w*,\\s*[a-zA-Z_]\\w*\\s*:=[^\\n]+\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,7}(defer|go)\\s+[^\\n]+\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,7}[a-zA-Z_]\\w*\\([^\\n]*\\n"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[ ]{4,7}[a-zA-Z_][\\w\\[\\]]*\\{\\s*\\n"
                 }
               ]
             },

@@ -1,6 +1,11 @@
 [
   {
-    "type": "code_block",
+    "type": "code_block_4",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "code_block_8plus",
     "named": true,
     "fields": {}
   },
@@ -19,7 +24,11 @@
       "required": false,
       "types": [
         {
-          "type": "code_block",
+          "type": "code_block_4",
+          "named": true
+        },
+        {
+          "type": "code_block_8plus",
           "named": true
         },
         {

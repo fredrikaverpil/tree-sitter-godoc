@@ -249,7 +249,7 @@ var b bytes.Buffer
 (document
   (text_line)
   (var_line)
-  (code_block))
+  (code_block_4))
 
 ==================
 Code block with 8-space indentation (textproto example)
@@ -266,7 +266,7 @@ For example, a client might run a HELP command:
 
 (document
   (text_line)
-  (code_block))
+  (code_block_8plus))
 
 ==================
 Code block with multiple patterns
@@ -285,7 +285,7 @@ Here's an example with various Go patterns:
 
 (document
   (text_line)
-  (code_block))
+  (code_block_4))
 
 ==================
 Indented prose after declaration (not a code block)
@@ -317,7 +317,7 @@ Example with defer:
 
 (document
   (text_line)
-  (code_block))
+  (code_block_4))
 
 ==================
 Code block starting with method call
@@ -350,7 +350,7 @@ Example with empty lines:
 
 (document
   (text_line)
-  (code_block))
+  (code_block_4))
 
 ==================
 Code block with map literal
@@ -367,4 +367,4 @@ Given that input, ReadMIMEHeader returns the map:
 
 (document
   (text_line)
-  (code_block))
+  (code_block_4))
