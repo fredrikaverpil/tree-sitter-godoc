@@ -106,7 +106,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PATTERN",
-        "value": "func\\s+[^{\\n]+"
+        "value": "func\\s+(?:[^\\{\\n]|\\{[^\\s\\n])+"
       }
     },
     "func_block": {

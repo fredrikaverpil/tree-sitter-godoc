@@ -21,6 +21,28 @@ type Message interface{}
   (type_line))
 
 ==================
+Function with interface{} parameter
+==================
+
+func Assert(t TestingT, comparison BoolOrComparison, msgAndArgs ...interface{})
+
+---
+
+(document
+  (func_line))
+
+==================
+Function with multiple interface{} parameters
+==================
+
+func Process(data interface{}, callback interface{}) error
+
+---
+
+(document
+  (func_line))
+
+==================
 Section header
 ==================
 

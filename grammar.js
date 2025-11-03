@@ -43,7 +43,9 @@ module.exports = grammar({
 		)),
 
 		// Function signature - capture whole line starting with "func" (but not ending with {)
-		func_line: $ => token(/func\s+[^{\n]+/),
+		// Matches { within the line (like interface{}) but not { at end (which indicates func_block)
+		// Strategy: { is only matched when followed immediately by a non-whitespace character
+		func_line: $ => token(/func\s+(?:[^\{\n]|\{[^\s\n])+/),
 
 		// Function block: func Name() {
 		//   ...
