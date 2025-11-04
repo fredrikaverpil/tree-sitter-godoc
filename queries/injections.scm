@@ -32,3 +32,6 @@
 ((const_block) @injection.content
   (#set! injection.language "go"))
 
+; Inject Go syntax into code blocks (indented code examples in documentation)
+((code_block) @injection.content
+  (#set! injection.language "go"))

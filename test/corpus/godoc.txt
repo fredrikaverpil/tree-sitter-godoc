@@ -267,7 +267,7 @@ Example usage:
   (text_line))
 
 ==================
-Indented variable declaration (4 spaces)
+Indented variable declaration (4 spaces) - code example
 ==================
 
 Example with variable:
@@ -278,10 +278,10 @@ Example with variable:
 
 (document
   (text_line)
-  (var_line))
+  (code_block))
 
 ==================
-Indented constant declaration (8 spaces)
+Indented constant declaration (8 spaces) - code example
 ==================
 
 Example with constant:
@@ -292,10 +292,10 @@ Example with constant:
 
 (document
   (text_line)
-  (const_line))
+  (code_block))
 
 ==================
-Indented function signature (4 spaces)
+Indented function signature (4 spaces) - code example
 ==================
 
 Example function:
@@ -306,10 +306,10 @@ Example function:
 
 (document
   (text_line)
-  (func_line))
+  (code_block))
 
 ==================
-Indented function block (4 spaces)
+Indented function block (4 spaces) - code example
 ==================
 
 Example with implementation:
@@ -322,10 +322,10 @@ Example with implementation:
 
 (document
   (text_line)
-  (func_block))
+  (code_block))
 
 ==================
-Indented type struct block (8 spaces)
+Indented type struct block (8 spaces) - code example
 ==================
 
 Example type definition:
@@ -339,10 +339,10 @@ Example type definition:
 
 (document
   (text_line)
-  (type_block))
+  (code_block))
 
 ==================
-Indented var block (4 spaces)
+Indented var block (4 spaces) - code example
 ==================
 
 Example with multiple variables:
@@ -356,10 +356,10 @@ Example with multiple variables:
 
 (document
   (text_line)
-  (var_block))
+  (code_block))
 
 ==================
-Indented const block (8 spaces)
+Indented const block (8 spaces) - code example
 ==================
 
 Example with multiple constants:
@@ -373,5 +373,118 @@ Example with multiple constants:
 
 (document
   (text_line)
-  (const_block))
+  (code_block))
+
+==================
+Code block with single-space indentation
+==================
+
+Example usage:
+
+ x := 10
+ fmt.Println(x)
+
+---
+
+(document
+  (text_line)
+  (code_block))
+
+==================
+Code block with blank lines
+==================
+
+Here's an example:
+
+ x := 10
+
+ y := 20
+ fmt.Println(x + y)
+
+---
+
+(document
+  (text_line)
+  (code_block))
+
+==================
+Code block with closing brace heuristic
+==================
+
+JSON example:
+
+ {
+     "key": "value"
+ }
+
+---
+
+(document
+  (text_line)
+  (code_block))
+
+==================
+List marker (currently parsed as code block)
+==================
+
+Shopping list:
+
+ - eggs
+ - milk
+ - bread
+
+---
+
+(document
+  (text_line)
+  (code_block))
+
+==================
+Numbered list (currently parsed as code block)
+==================
+
+Steps:
+
+ 1. First step
+ 2. Second step
+
+---
+
+(document
+  (text_line)
+  (code_block))
+
+==================
+Code block from zlib example (go doc output)
+==================
+
+For example, to write compressed data to a buffer:
+
+ var b bytes.Buffer
+ w := zlib.NewWriter(&b)
+ w.Write([]byte("hello, world\n"))
+ w.Close()
+
+---
+
+(document
+  (text_line)
+  (code_block))
+
+==================
+Multi-line code block with function
+==================
+
+Example function:
+
+ func Calculate(x, y int) int {
+     result := x + y
+     return result
+ }
+
+---
+
+(document
+  (text_line)
+  (code_block))
 

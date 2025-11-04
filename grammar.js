@@ -25,6 +25,7 @@ module.exports = grammar({
 				$.var_line,
 				$.const_line,
 				$.type_line,
+				$.code_block,
 				$.text_line,
 			)
 		),
@@ -138,6 +139,30 @@ module.exports = grammar({
 			seq('type', /.*/),  // No indentation
 			seq(/[ \t]+type/, /.*/))  // With indentation
 		),
+
+		// Code block: indented lines with Go code patterns or list markers
+		// Matches indented content that contains:
+		// - Go code markers: keywords, :=, {, //
+		// - List markers: -, *, +, numbered (treated as code blocks until proper list support)
+		// Uses negative precedence to match only when specific rules don't match
+		// Atomically matches all consecutive indented or blank lines in one token
+		code_block: $ => prec(-1, choice(
+			// Multi-line code block: first line with pattern + more indented/blank lines
+			token(seq(
+				// First line must have Go code pattern or list marker after indentation
+				/[ \t]+(?:(?:var|const|type|func|package|import|defer|go|return)\s|\/\/|[^\n]*:=|[^\n]*\{|[-*+]\s|[0-9]+\.)[^\n]*\n/,
+				// Followed by more indented or blank lines
+				repeat1(choice(
+					/[ \t]+[^\n]*\n/,                // Additional indented lines
+					/[ \t]*\n/                       // Blank lines within block
+				))
+			)),
+			// Single-line code block with optional closing brace
+			seq(
+				token(/[ \t]+(?:(?:var|const|type|func|package|import|defer|go|return)\s|\/\/|[^\n]*:=|[^\n]*\{|[-*+]\s|[0-9]+\.)[^\n]*\n/),
+				optional(token(/\}/))
+			)
+		)),
 
 		// Non-empty text line
 		text_line: $ => /.+/,
