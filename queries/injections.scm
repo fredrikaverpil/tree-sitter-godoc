@@ -1,5 +1,9 @@
 ; Treesitter injection queries for godoc
 ; These inject the Go parser into specific regions of godoc output
+; Inject Go syntax into package lines
+((package_line) @injection.content
+  (#set! injection.language "go"))
+
 ; Inject Go syntax into function lines
 ((func_line) @injection.content
   (#set! injection.language "go"))
@@ -12,7 +16,7 @@
 ((type_line) @injection.content
   (#set! injection.language "go"))
 
-; Inject Go syntax into type blocks (struct/interface definitions)
+; Inject Go syntax into type blocks
 ((type_block) @injection.content
   (#set! injection.language "go"))
 
@@ -32,6 +36,6 @@
 ((const_block) @injection.content
   (#set! injection.language "go"))
 
-; Inject Go syntax into code blocks (indented code examples in documentation)
+; Inject Go syntax into code blocks
 ((code_block) @injection.content
   (#set! injection.language "go"))
