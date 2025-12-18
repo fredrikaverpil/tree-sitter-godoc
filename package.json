@@ -1,0 +1,45 @@
+{
+  "name": "tree-sitter-godoc",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for Go documentation (godoc) output",
+  "main": "bindings/node",
+  "types": "bindings/node",
+  "keywords": [
+    "tree-sitter",
+    "parser",
+    "godoc",
+    "go"
+  ],
+  "files": [
+    "grammar.js",
+    "binding.gyp",
+    "prebuilds/**",
+    "bindings/node/*",
+    "queries/*",
+    "src/**",
+    "*.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fredrikaverpil/tree-sitter-godoc.git"
+  },
+  "author": "Fredrik Averpil",
+  "license": "MIT",
+  "devDependencies": {
+    "tree-sitter-cli": "^0.25.0"
+  },
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "build": "tree-sitter build"
+  },
+  "tree-sitter": [
+    {
+      "scope": "text.godoc",
+      "injection-regex": "^godoc$",
+      "file-types": ["godoc"],
+      "highlights": "queries/highlights.scm",
+      "injections": "queries/injections.scm"
+    }
+  ]
+}

@@ -31,10 +31,10 @@ module.exports = grammar({
 		),
 
 		// Package declaration
-		package_line: $ => token(seq('package', /.*/)),
+		package_line: _ => token(seq('package', /.*/)),
 
 		// Section headers
-		section_header: $ => token(choice(
+		section_header: _ => token(choice(
 			'VARIABLES',
 			'FUNCTIONS',
 			'TYPES',
@@ -46,7 +46,7 @@ module.exports = grammar({
 		// Matches { within the line (like interface{}) but not { at end (which indicates func_block)
 		// Strategy: { is only matched when followed immediately by a non-whitespace character
 		// Supports any indentation level (including no indentation)
-		func_line: $ => token(choice(
+		func_line: _ => token(choice(
 			/func\s+(?:[^\{\n]|\{[^\s\n])+/,  // No indentation
 			/[ \t]+func\s+(?:[^\{\n]|\{[^\s\n])+/  // With indentation
 		)),
@@ -56,7 +56,7 @@ module.exports = grammar({
 		// }
 		// Matches function implementations with bodies in curly braces
 		// Supports any indentation level (including no indentation)
-		func_block: $ => seq(
+		func_block: _ => seq(
 			token(choice(
 				/func\s+.*\{/,  // No indentation
 				/[ \t]+func\s+.*\{/  // With indentation
@@ -73,7 +73,7 @@ module.exports = grammar({
 		//   ...
 		// )
 		// Supports any indentation level (including no indentation)
-		var_block: $ => seq(
+		var_block: _ => seq(
 			token(choice(
 				seq('var', /\s*\(/),  // No indentation
 				seq(/[ \t]+var/, /\s*\(/)  // With indentation
@@ -87,7 +87,7 @@ module.exports = grammar({
 
 		// Single-line variable declaration (must NOT have opening paren)
 		// Supports any indentation level (including no indentation)
-		var_line: $ => token(choice(
+		var_line: _ => token(choice(
 			seq('var', /\s+[^\(\n][^\n]*/),  // No indentation
 			seq(/[ \t]+var/, /\s+[^\(\n][^\n]*/)  // With indentation
 		)),
@@ -96,7 +96,7 @@ module.exports = grammar({
 		//   ...
 		// )
 		// Supports any indentation level (including no indentation)
-		const_block: $ => seq(
+		const_block: _ => seq(
 			token(choice(
 				seq('const', /\s*\(/),  // No indentation
 				seq(/[ \t]+const/, /\s*\(/)  // With indentation
@@ -110,7 +110,7 @@ module.exports = grammar({
 
 		// Single-line constant declaration (must NOT have opening paren)
 		// Supports any indentation level (including no indentation)
-		const_line: $ => token(choice(
+		const_line: _ => token(choice(
 			seq('const', /\s+[^\(\n][^\n]*/),  // No indentation
 			seq(/[ \t]+const/, /\s+[^\(\n][^\n]*/)  // With indentation
 		)),
@@ -120,7 +120,7 @@ module.exports = grammar({
 		// }
 		// Only matches when there's content on subsequent lines (not single-line interface{})
 		// Supports any indentation level (including no indentation)
-		type_block: $ => seq(
+		type_block: _ => seq(
 			token(choice(
 				/type\s+\w+\s+(struct|interface)\s*\{/,  // No indentation
 				/[ \t]+type\s+\w+\s+(struct|interface)\s*\{/  // With indentation
@@ -135,7 +135,7 @@ module.exports = grammar({
 
 		// Single-line type definition (everything else)
 		// Supports any indentation level (including no indentation)
-		type_line: $ => token(choice(
+		type_line: _ => token(choice(
 			seq('type', /.*/),  // No indentation
 			seq(/[ \t]+type/, /.*/))  // With indentation
 		),
@@ -146,7 +146,7 @@ module.exports = grammar({
 		// - List markers: -, *, +, numbered (treated as code blocks until proper list support)
 		// Uses negative precedence to match only when specific rules don't match
 		// Atomically matches all consecutive indented or blank lines in one token
-		code_block: $ => prec(-1, choice(
+		code_block: _ => prec(-1, choice(
 			// Multi-line code block: first line with pattern + more indented/blank lines
 			token(seq(
 				// First line must have Go code pattern or list marker after indentation
@@ -165,6 +165,6 @@ module.exports = grammar({
 		)),
 
 		// Non-empty text line
-		text_line: $ => /.+/,
+		text_line: _ => /.+/,
 	}
 });
