@@ -263,8 +263,7 @@ Example usage:
 
 (document
   (text_line)
-  (text_line)
-  (text_line))
+  (code_block))
 
 ==================
 Indented variable declaration (4 spaces) - code example
@@ -437,7 +436,9 @@ Shopping list:
 
 (document
   (text_line)
-  (code_block))
+  (list_item)
+  (list_item)
+  (list_item))
 
 ==================
 Numbered list (currently parsed as code block)
@@ -452,7 +453,8 @@ Steps:
 
 (document
   (text_line)
-  (code_block))
+  (list_item)
+  (list_item))
 
 ==================
 Code block from zlib example (go doc output)
@@ -487,4 +489,3 @@ Example function:
 (document
   (text_line)
   (code_block))
-

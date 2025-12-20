@@ -17,6 +17,10 @@
           },
           {
             "type": "SYMBOL",
+            "name": "heading"
+          },
+          {
+            "type": "SYMBOL",
             "name": "func_block"
           },
           {
@@ -53,7 +57,15 @@
           },
           {
             "type": "SYMBOL",
+            "name": "list_item"
+          },
+          {
+            "type": "SYMBOL",
             "name": "text_line"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "_blank_line"
           }
         ]
       }
@@ -98,6 +110,59 @@
           {
             "type": "STRING",
             "value": "DEPRECATED"
+          }
+        ]
+      }
+    },
+    "heading": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "#"
+          },
+          {
+            "type": "PATTERN",
+            "value": ".*"
+          }
+        ]
+      }
+    },
+    "list_item": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "PATTERN",
+            "value": "[ \\t]*"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[*+\\-•]"
+              },
+              {
+                "type": "PATTERN",
+                "value": "[0-9]+[.)]"
+              }
+            ]
+          },
+          {
+            "type": "PATTERN",
+            "value": "[ \\t]+"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[^\\n]*"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\n"
           }
         ]
       }
@@ -441,7 +506,7 @@
               "members": [
                 {
                   "type": "PATTERN",
-                  "value": "[ \\t]+(?:(?:var|const|type|func|package|import|defer|go|return)\\s|\\/\\/|[^\\n]*:=|[^\\n]*\\{|[-*+]\\s|[0-9]+\\.)[^\\n]*\\n"
+                  "value": "[ \\t]+(?:(?:var|const|type|func|package|import|defer|go|return)\\s|\\/\\/|[^\\n]*:=|[\\w\\[\\]]*\\{|[a-z0-9]+\\.[A-Z]\\w*\\(|fmt\\.\\w+\\()[^\\n]*\\n"
                 },
                 {
                   "type": "REPEAT1",
@@ -469,7 +534,7 @@
                 "type": "TOKEN",
                 "content": {
                   "type": "PATTERN",
-                  "value": "[ \\t]+(?:(?:var|const|type|func|package|import|defer|go|return)\\s|\\/\\/|[^\\n]*:=|[^\\n]*\\{|[-*+]\\s|[0-9]+\\.)[^\\n]*\\n"
+                  "value": "[ \\t]+(?:(?:var|const|type|func|package|import|defer|go|return)\\s|\\/\\/|[^\\n]*:=|[\\w\\[\\]]*\\{|[a-z0-9]+\\.[A-Z]\\w*\\(|fmt\\.\\w+\\()[^\\n]*\\n"
                 }
               },
               {
@@ -495,6 +560,10 @@
     "text_line": {
       "type": "PATTERN",
       "value": ".+"
+    },
+    "_blank_line": {
+      "type": "PATTERN",
+      "value": "\\s*\\n"
     }
   },
   "extras": [

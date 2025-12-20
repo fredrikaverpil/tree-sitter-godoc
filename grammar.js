@@ -18,6 +18,7 @@ module.exports = grammar({
         choice(
           $.package_line,
           $.section_header,
+          $.heading,
           $.func_block,
           $.func_line,
           $.var_block,
@@ -27,7 +28,9 @@ module.exports = grammar({
           $.const_line,
           $.type_line,
           $.code_block,
+          $.list_item,
           $.text_line,
+          $._blank_line,
         ),
       ),
 
@@ -38,6 +41,21 @@ module.exports = grammar({
     section_header: (_) =>
       token(
         choice("VARIABLES", "FUNCTIONS", "TYPES", "CONSTANTS", "DEPRECATED"),
+      ),
+
+    // Headings (Go 1.19+)
+    heading: (_) => token(seq("#", /.*/)),
+
+    // List items
+    list_item: (_) =>
+      token(
+        seq(
+          /[ \t]*/,
+          choice(/[*+\-•]/, /[0-9]+[.)]/),
+          /[ \t]+/,
+          /[^\n]*/,
+          /\n/,
+        ),
       ),
 
     // Function signature - capture whole line starting with "func" (but not ending with {)
@@ -170,10 +188,9 @@ module.exports = grammar({
         ), // With indentation
       ),
 
-    // Code block: indented lines with Go code patterns or list markers
+    // Code block: indented lines with Go code patterns
     // Matches indented content that contains:
-    // - Go code markers: keywords, :=, {, //
-    // - List markers: -, *, +, numbered (treated as code blocks until proper list support)
+    // - Go code markers: keywords, :=, {, //, pkg.Func(), Person{}
     // Uses negative precedence to match only when specific rules don't match
     // Atomically matches all consecutive indented or blank lines in one token
     code_block: (_) =>
@@ -183,8 +200,8 @@ module.exports = grammar({
           // Multi-line code block: first line with pattern + more indented/blank lines
           token(
             seq(
-              // First line must have Go code pattern or list marker after indentation
-              /[ \t]+(?:(?:var|const|type|func|package|import|defer|go|return)\s|\/\/|[^\n]*:=|[^\n]*\{|[-*+]\s|[0-9]+\.)[^\n]*\n/,
+              // First line must have Go code pattern after indentation
+              /[ \t]+(?:(?:var|const|type|func|package|import|defer|go|return)\s|\/\/|[^\n]*:=|[\w\[\]]*\{|[a-z0-9]+\.[A-Z]\w*\(|fmt\.\w+\()[^\n]*\n/,
               // Followed by more indented or blank lines
               repeat1(
                 choice(
@@ -197,7 +214,7 @@ module.exports = grammar({
           // Single-line code block with optional closing brace
           seq(
             token(
-              /[ \t]+(?:(?:var|const|type|func|package|import|defer|go|return)\s|\/\/|[^\n]*:=|[^\n]*\{|[-*+]\s|[0-9]+\.)[^\n]*\n/,
+              /[ \t]+(?:(?:var|const|type|func|package|import|defer|go|return)\s|\/\/|[^\n]*:=|[\w\[\]]*\{|[a-z0-9]+\.[A-Z]\w*\(|fmt\.\w+\()[^\n]*\n/,
             ),
             optional(token(/\}/)),
           ),
@@ -206,5 +223,8 @@ module.exports = grammar({
 
     // Non-empty text line
     text_line: (_) => /.+/,
+
+    // Blank line (hidden)
+    _blank_line: (_) => /\s*\n/,
   },
 });
