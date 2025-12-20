@@ -39,6 +39,14 @@
           "named": true
         },
         {
+          "type": "heading",
+          "named": true
+        },
+        {
+          "type": "list_item",
+          "named": true
+        },
+        {
           "type": "package_line",
           "named": true
         },
@@ -90,6 +98,14 @@
   },
   {
     "type": "func_line",
+    "named": true
+  },
+  {
+    "type": "heading",
+    "named": true
+  },
+  {
+    "type": "list_item",
     "named": true
   },
   {
